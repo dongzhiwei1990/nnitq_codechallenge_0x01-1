@@ -12,9 +12,9 @@ public class ReadFolder {
         }
         BigDecimal startTime = new BigDecimal(System.currentTimeMillis());
 
-        System.out.println("微信昵称：邕城里的大男孩");
-        System.out.println("CPU型号：i3-8100 CPU @ 3.60GHz");
-        System.out.println("MEM：16G");
+//        System.out.println("微信昵称：邕城里的大男孩");
+//        System.out.println("CPU型号：i3-8100 CPU @ 3.60GHz");
+//        System.out.println("MEM：16G");
         System.out.println("操作系统：" + System.getProperty("os.name"));
         System.out.println("JDK版本：" + System.getProperty("java.version"));
 
