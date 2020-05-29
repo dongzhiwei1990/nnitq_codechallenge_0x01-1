@@ -18,14 +18,13 @@ public class ReadFolder2 {
         Scanner scanner = new Scanner(System.in);
         System.out.println("【确保目录存在执行权限】");
         System.out.println("输入需要遍历的目录：");
-        path = scanner.next();
         while (true) {
+            path = scanner.next();
             file = new File(path);
             if (file.exists()) {
                 break;
             } else {
                 System.out.println("目录不存在，请重新输入：");
-                scanner.next();
             }
         }
 
