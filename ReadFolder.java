@@ -22,7 +22,7 @@ public class ReadFolder {
         System.out.println("JDK版本：" + System.getProperty("java.version"));
 
 //        String path = args[0];
-        String path = "/";
+        String path = "/Users/sinry";
         readDir2(path);
 
         BigDecimal endTime = new BigDecimal(System.currentTimeMillis());
@@ -71,43 +71,6 @@ public class ReadFolder {
 //        if (listFiles == null) return;
 //        if (!f.isDirectory() || listFiles.length <= 0) return;
 //
-        // 所有文件总数
-        AtomicLong fileTotalCount = new AtomicLong();
-        // 空文件夹数量
-        AtomicLong emptyFolderCount = new AtomicLong();
-
-        Path start = FileSystems.getDefault().getPath(path);
-        try {
-//            Files.walk(start).parallel().forEach(System.out::println);
-            Files.walk(start).forEach(i -> {
-                File file = i.toFile();
-                if (file.isFile()) {
-                    fileTotalCount.getAndIncrement();
-                } else {
-                    String[] dirs = file.list();
-                    if (!(dirs != null && dirs.length > 0)) {
-                        emptyFolderCount.getAndIncrement();
-                    }
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-
-        String s = "所有文件总数：" + fileTotalCount + "\n" +
-                "空文件夹个数：" + emptyFolderCount;
-        System.out.println(s);
-    }
-
-    private static void readDir3(String path) {
-        File f = new File(path);
-        System.out.println("读取目录：" + path);
-
-        File[] listFiles = f.listFiles();
-        if (listFiles == null) return;
-        if (!f.isDirectory() || listFiles.length <= 0) return;
-
         // 所有文件总数
         AtomicLong fileTotalCount = new AtomicLong();
         // 空文件夹数量
