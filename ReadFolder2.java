@@ -43,7 +43,7 @@ public class ReadFolder2 {
 }
 
 class FileList {
-    private final static int FIRST_COUNT = 5;
+    private final static int FIRST_COUNT = 3;
     // 所有文件总数
     static volatile AtomicLong fileTotalCount = new AtomicLong();
     // 空文件夹数量
@@ -51,7 +51,7 @@ class FileList {
     // 文件夹
     private static volatile AtomicReference<List<File>> folders = new AtomicReference<>(Collections.emptyList());
     // 线程数
-    private final static int THREAD_COUNT = 20;
+    private final static int THREAD_COUNT = 10;
 
     void readDir(File parentFile) {
 
