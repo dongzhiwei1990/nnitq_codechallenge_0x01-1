@@ -29,7 +29,8 @@ public class ReadFolder2 {
 
         BigDecimal startTime = new BigDecimal(System.currentTimeMillis());
 
-        String path = "/Users/sinry";
+        String path = args[0];
+//        String path = "/Users/sinry";
         File file = new File(path);
         FileList fileList = new FileList();
         fileList.readDir(file);
