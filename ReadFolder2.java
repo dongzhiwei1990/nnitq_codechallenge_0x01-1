@@ -1,8 +1,11 @@
-import java.io.File;
+import com.sun.xml.internal.messaging.saaj.packaging.mime.util.LineInputStream;
+
+import java.io.*;
 import java.math.BigDecimal;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicLong;
@@ -30,6 +33,7 @@ public class ReadFolder2 {
 
         BigDecimal startTime = new BigDecimal(System.currentTimeMillis());
         FileList fileList = new FileList();
+
         fileList.readDir(file);
 
         BigDecimal endTime = new BigDecimal(System.currentTimeMillis());
@@ -61,7 +65,7 @@ class FileList {
         }
         forReadLevel3(Arrays.asList(listFiles), FIRST_COUNT);
 //        folders.get().forEach(i -> System.out.println(i.getAbsoluteFile()));
-        System.out.println(folders.get().size());
+//        System.out.println(folders.get().size());
 
         // 2、使用线程池去分别遍历
         ExecutorService pool = Executors.newFixedThreadPool(THREAD_COUNT);
@@ -88,6 +92,9 @@ class FileList {
 
         List<File> fileList = new ArrayList<>();
         for (File file: parentFiles) {
+            // 软连接校验
+            if (isSymbolicLink(file)) continue;
+
             if (!file.isDirectory()) {
                 FileList.fileTotalCount.getAndIncrement();
             } else {
@@ -112,6 +119,53 @@ class FileList {
         }
         return Arrays.asList(listFiles);
     }
+
+    static boolean isSymbolicLink(File f) {
+
+//        =================== 分割线 =======================
+//        不可用
+//        Runtime runTime = Runtime.getRuntime();
+//        try {
+//            Process exec = runTime.exec("ls -l " + f.getAbsolutePath());
+//            InputStreamReader inputStreamReader = new InputStreamReader(exec.getInputStream());
+//            LineNumberReader line = new LineNumberReader(inputStreamReader);
+//            String res = line.readLine();
+//            if (res != null) {
+//                char c = res.charAt(0);
+//                if (c == 'l') {
+////                    System.out.println(f.getAbsolutePath());
+//                    return true;
+//                }
+//            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        =================== 分割线 =======================
+//        不可用
+//        try {
+//            // toPath()存在同步锁
+//            Path path = f.toPath().toRealPath();
+//            return !path.equals(f.toPath());
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        =================== 分割线 =======================
+//        /Users 19s
+//        try {
+//            return !f.getCanonicalPath().equals(f.getAbsolutePath());
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        =================== 分割线 =======================
+//        /Users 10s
+        String path = f.getAbsolutePath();
+        Path p = Paths.get(path);
+        if (Files.isSymbolicLink(p)) {
+//            System.out.println(p);
+            return true;
+        }
+        return false;
+    }
 }
 
 class FileThread {
@@ -128,6 +182,9 @@ class FileThread {
         try {
             Files.walk(path).forEach(i -> {
                 File file = i.toFile();
+                // 软连接校验
+                if (FileList.isSymbolicLink(file)) return;
+
                 if (file.isFile()) {
                     FileList.fileTotalCount.getAndIncrement();
                 } else {
